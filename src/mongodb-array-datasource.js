@@ -1,3 +1,4 @@
+const configValidation = require("./config-validation");
 const MongoDbDataSource = require("./mongodb-datasource");
 
 class MongoDbArrayDataSource extends MongoDbDataSource {
@@ -39,6 +40,9 @@ class MongoDbArrayDataSource extends MongoDbDataSource {
    */
   hasData(config = {}) {
     return new Promise((resolve, reject) => {
+      // Doesn't matter for our purposes:
+      delete config.bundle;
+      delete config.area;
       this.findCollection(config, (err, results) => {
         if (err) {
           return reject(err);

@@ -16,7 +16,7 @@ class MongoDbObjectDataSource extends MongoDbArrayDataSource {
         const resultsDictionary =
           (results &&
             results.reduce((output, result) => {
-              output[result.id] = result;
+              output[result.id || result._id.id] = result;
               return output;
             }, {})) ||
           {};

@@ -13,7 +13,7 @@
   ],
   "author": "Chris Witt",
   "dependencies": {
-    "mongodb": "^3.5.9"
+    "mongodb": "^4.6.0"
   },
   "repository": {
     "type": "git",

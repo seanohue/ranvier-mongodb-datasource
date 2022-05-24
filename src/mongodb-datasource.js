@@ -93,7 +93,8 @@ class MongoDbDataSource {
     }
 
     const db = client.db(this.config.name);
-    return db.collection(config.collection);
+    const collection = db.collection(config.collection);
+    return collection;
   }
 
   close() {
