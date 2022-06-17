@@ -78,6 +78,7 @@ class MongoDbArrayDataSource extends MongoDbDataSource {
    * @return {Promise<any>}
    */
   fetch(config = {}, id) {
+    console.log('Fetching with ', config, id);
     return new Promise((resolve, reject) => {
       this.findObject(config, id, (err, results) => {
         if (err) {
@@ -122,6 +123,10 @@ class MongoDbArrayDataSource extends MongoDbDataSource {
         resolve(results);
       });
     });
+  }
+
+  delete(config = {}, id) {
+    return this.update(config, id, null);
   }
 }
 

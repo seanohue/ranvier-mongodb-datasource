@@ -4,10 +4,10 @@ const { validateDatasourceConfig } = require("./config-validation");
 class MongoDbDataSource {
   /**
    * The constructor of the DataSource takes two parameters:
-   *    config  : the value of 'config' from the `dataSources` configuration in
+   *    config: the value of 'config' from the `dataSources` configuration in
    *    ranvier.json
    *
-   *    example :
+   *    example:
    *    {
    *      host: "192.168.1.1",
    *      name: "myDatabase",
@@ -15,7 +15,7 @@ class MongoDbDataSource {
    *      pass: "password",
    *    }
    *
-   *    warning : see the ranvier website for security information concerning
+   *    warning: see the ranvier website for security information concerning
    *    using .env files and ranvier.conf.js to protect your database information.
    *
    *    https://ranviermud.com/extending/entity_loaders/#sensitive-data
