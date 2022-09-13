@@ -23,6 +23,7 @@ class MongoDbDataSource {
   constructor(config = {}) {
     this.config = config;
     validateDatasourceConfig(this.config);
+    console.log('Mongo URI: ', this.uri);
     this.client = clientConnect(this.uri);
   }
 
