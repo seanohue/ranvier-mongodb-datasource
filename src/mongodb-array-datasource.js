@@ -40,9 +40,9 @@ class MongoDbArrayDataSource extends MongoDbDataSource {
    */
   hasData(config = {}) {
     return new Promise((resolve, reject) => {
-      // Doesn't matter for our purposes:
-      delete config.bundle;
-      delete config.area;
+      // Doesn't matter for our purposes: (or does it?)
+      // delete config.bundle;
+      // delete config.area;
       this.findCollection(config, (err, results) => {
         if (err) {
           return reject(err);
