@@ -11,9 +11,9 @@
     "mongo",
     "mongodb"
   ],
-  "author": "Chris Witt",
+  "author": "Chris Witt & Sean O'Donohue",
   "dependencies": {
-    "mongodb": "^4.6.0"
+    "mongodb": "^4.11.0"
   },
   "repository": {
     "type": "git",

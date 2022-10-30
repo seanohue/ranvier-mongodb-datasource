@@ -6,13 +6,11 @@ module.exports = clientConnect = async (uri) => {
   if (!uri) {
     return Promise.reject("No Url Provided for MongoDbDatasource Connection");
   }
-  let isConnected = false;
-  try {
-    isConnected = client && client.isConnected();
-  } catch (e) {
-    console.error(e);
-    console.log({ client });
-  }
+
+  // As of v4.x.x, MongoDb does not expose `isConnected()` method or property.
+  // Reconnecting is handled internally to the Mongo driver, so we just check
+  // to see if the client is instantiated:
+  let isConnected =  Boolean(client);
 
   if (isConnected) {
     return Promise.resolve(client);
