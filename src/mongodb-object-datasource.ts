@@ -1,8 +1,8 @@
-import { MongoDbDataSourceConfig } from "./types";
+import { MongoDbDataSourceConfig } from "./types";;
+import MongoDbDataSource from "./mongodb-datasource";
 
-const MongoDbArrayDataSource = require("./mongodb-array-datasource");
-
-class MongoDbObjectDataSource extends MongoDbArrayDataSource {
+// FIXME: May need to add some methods "lost" from the array datasource class. Those can be moved to base.
+export default class MongoDbObjectDataSource extends MongoDbDataSource {
   /**
    * Returns all entries for a given config.
    */
@@ -18,7 +18,7 @@ class MongoDbObjectDataSource extends MongoDbArrayDataSource {
 
       output[key] = result;
       return output;
-    }, {}) || {};
+    }, {});
   }
 
   /**
@@ -28,8 +28,6 @@ class MongoDbObjectDataSource extends MongoDbArrayDataSource {
   async replace(config = {} as MongoDbDataSourceConfig, data: any) {
     /* Data should come in as a dictionary, convert to array. */
     const dataArray = Array.from(Object.values(data));
-    const results =  await this.replaceCollection(config, dataArray);
+    return this.replaceCollection(config, dataArray);
   }
 }
-
-module.exports = MongoDbObjectDataSource;
