@@ -1,4 +1,5 @@
 import MongoDbDataSource from "./mongodb-datasource";
+import { MongoDbDataSourceConfig } from "./types";
 
 export default class MongoDbArrayDataSource extends MongoDbDataSource {
   /**
@@ -9,13 +10,13 @@ export default class MongoDbArrayDataSource extends MongoDbDataSource {
    *   rootPath: A string representing the project root directory (the same
    *             directory that contains ranvier.json)
    */
-  constructor(config = {}, rootPath) {
-    super(config, rootPath);
+  constructor(config = {} as MongoDbDataSourceConfig, rootPath) {
+    super(config);
   }
 
   /*
   The first parameter of each method from here on will be the config defined in
-  the the 'entityLoaders' entry. For example:
+  the 'entityLoaders' entry. For example:
 
     "entityLoaders": {
       "items": {
@@ -33,30 +34,16 @@ export default class MongoDbArrayDataSource extends MongoDbDataSource {
 
   /**
    * Returns whether or not the configured collection has records
-   *
-   * @param {object} config
-   * @return {Promise<boolean>}
    */
-  hasData(config = {}) {
-    return new Promise((resolve, reject) => {
-      this.findCollection(config, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        if (results && results.length > 0) {
-          resolve(true);
-        }
-        resolve(false);
-      });
-    });
+  async hasData(config = {} as MongoDbDataSourceConfig) {
+    const collection = await this.findCollection(config);
+    return Boolean(collection.length);
   }
 
   /**
    * Returns all entries for a given config.
-   * @param {object} config
-   * @return {Promise<any>}
    */
-  async fetchAll(config = {}) {
+  async fetchAll(config = {} as MongoDbDataSourceConfig) {
     return this.findCollection(config);
   }
 
@@ -66,55 +53,30 @@ export default class MongoDbArrayDataSource extends MongoDbDataSource {
    * @param {string} id
    * @return {Promise<any>}
    */
-  fetch(config = {}, id) {
+  async fetch(config = {} as MongoDbDataSourceConfig, id: string) {
     console.log('Fetching with ', config, id);
-    return new Promise((resolve, reject) => {
-      this.findObject(config, id, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
+    return this.findObject(config, id);
   }
 
   /**
    * Perform a full replace of all data for a given config. This is the write
    * version of fetchAll
-   * @param {Object} config
-   * @param {any} data
-   * @return {Promise}
    */
-  replace(config = {}, data) {
-    return new Promise((resolve, reject) => {
-      this.replaceCollection(config, data, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results.ops);
-      });
-    });
+  async replace(config = {} as MongoDbDataSourceConfig, data: any) {
+    return this.replaceCollection(config, data);;
   }
 
   /**
    * Update specific record. Write version of `fetch`
-   * @param {Object} config
-   * @param {string} id
-   * @param {any} data
-   * @return {Promise}
    */
-  update(config = {}, id, data) {
-    return new Promise((resolve, reject) => {
-      this.replaceObject(config, id, data, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
+  async update(config = {} as MongoDbDataSourceConfig, id: string, data: any) {
+    return this.replaceObject(config, id, data);
   }
 
-  delete(config = {}, id) {
+  /**
+   * Delete simply overwrites with `null`
+   */
+  async delete(config = {} as MongoDbDataSourceConfig, id: string) {
     return this.update(config, id, null);
   }
 }
