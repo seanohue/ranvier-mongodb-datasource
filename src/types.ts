@@ -11,3 +11,7 @@ export interface MongoDbIdentity {
   bundle?: string;
   area?: string;
 };
+
+export type MongoDbIdentityFilter = {
+  [Key in `_id.${keyof MongoDbIdentity}`]?: MongoDbIdentity[keyof MongoDbIdentity];
+}

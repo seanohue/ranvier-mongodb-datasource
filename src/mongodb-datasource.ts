@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import clientConnect from "./client-connect";
 import validateDatasourceConfig from "./config-validation";
-import { MongoDbDataSourceConfig, MongoDbIdentity } from "./types";
+import { MongoDbDataSourceConfig, MongoDbIdentity, MongoDbIdentityFilter } from "./types";
 
 export default class MongoDbDataSource {
   /**
@@ -60,7 +60,7 @@ export default class MongoDbDataSource {
     id: string, 
     data
   ) {
-    const collection = await this.clientCollection(this.client, config);
+    const collection = await this.clientCollection(config);
     if (data) {
       data._id = this.buildIdentity(config, id);
       return collection.replaceOne(
@@ -73,9 +73,9 @@ export default class MongoDbDataSource {
     }
   }
 
-  async findCollection(config) {
+  async findCollection(config: MongoDbDataSourceConfig) {
     try {
-      const collection = this.clientCollection(config);
+      const collection = await this.clientCollection(config);
       const cursor = collection.find(this.buildIdFilter(config));
       return cursor.toArray();
     } catch (e) {
@@ -84,14 +84,10 @@ export default class MongoDbDataSource {
     }
   }
 
-  findObject(config, id, callback) {
-    this.client.catch(callback).then((client) => {
-      this.clientCollection(client, config).findOne(
-        this.buildIdFilter(config, id),
-        {},
-        callback
-      );
-    });
+  async findObject(config: MongoDbDataSourceConfig, id: string) {
+    const collection = await this.clientCollection(config);
+    const cursor = await collection.findOne(this.buildIdFilter(config, id),{});
+    return cursor;
   }
 
   async clientCollection(config: MongoDbDataSourceConfig) {
@@ -115,16 +111,8 @@ export default class MongoDbDataSource {
     return collection;
   }
 
-  close() {
-    this.client
-      .catch((err) => {
-        throw new Error(err);
-      })
-      .then((client) => {
-        if (client && client.isConnected()) {
-          client.close();
-        }
-      });
+  async close() {
+    this.client?.close();
   }
 
   buildIdentity(config, id?: string | number) {
@@ -149,7 +137,7 @@ export default class MongoDbDataSource {
 
   buildIdFilter(config: MongoDbDataSourceConfig, id?: string) {
     const identity = this.buildIdentity(config, id);
-    const filter = {};
+    const filter: MongoDbIdentityFilter = {};
     if (identity.id) {
       filter["_id.id"] = identity.id;
     }
