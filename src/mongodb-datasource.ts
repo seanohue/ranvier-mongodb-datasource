@@ -1,7 +1,9 @@
-const clientConnect = require("./client-connect");
-const { validateDatasourceConfig } = require("./config-validation");
+import { MongoClient } from "mongodb";
+import clientConnect from "./client-connect";
+import validateDatasourceConfig from "./config-validation";
+import { MongoDbDataSourceConfig } from "./types";
 
-class MongoDbDataSource {
+export default class MongoDbDataSource {
   /**
    * The constructor of the DataSource takes two parameters:
    *    config: the value of 'config' from the `dataSources` configuration in
@@ -20,10 +22,16 @@ class MongoDbDataSource {
    *
    *    https://ranviermud.com/extending/entity_loaders/#sensitive-data
    */
-  constructor(config = {}) {
+  client: null | MongoClient;
+  config: MongoDbDataSourceConfig;
+  constructor(config = {} as MongoDbDataSourceConfig) {
     this.config = config;
     validateDatasourceConfig(this.config);
-    this.client = clientConnect(this.uri);
+    this.client = null;
+  }
+
+  async init() {
+    this.client = await clientConnect(this.uri);
   }
 
   get uri() {
@@ -141,5 +149,3 @@ class MongoDbDataSource {
     return filter;
   }
 }
-
-module.exports = MongoDbDataSource;

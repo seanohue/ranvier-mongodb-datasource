@@ -1,7 +1,6 @@
-const configValidation = require("./config-validation");
-const MongoDbDataSource = require("./mongodb-datasource");
+import MongoDbDataSource from "./mongodb-datasource";
 
-class MongoDbArrayDataSource extends MongoDbDataSource {
+export default class MongoDbArrayDataSource extends MongoDbDataSource {
   /**
    * The constructor of the DataSource takes two parameters:
    *   config: the value of 'config' from the `dataSources` configuration in
@@ -119,5 +118,3 @@ class MongoDbArrayDataSource extends MongoDbDataSource {
     return this.update(config, id, null);
   }
 }
-
-module.exports = MongoDbArrayDataSource;
