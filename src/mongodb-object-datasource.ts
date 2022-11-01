@@ -1,48 +1,34 @@
+import { MongoDbDataSourceConfig } from "./types";
+
 const MongoDbArrayDataSource = require("./mongodb-array-datasource");
 
 class MongoDbObjectDataSource extends MongoDbArrayDataSource {
   /**
    * Returns all entries for a given config.
-   * @param {object} config
-   * @return {Promise<any>}
    */
-  fetchAll(config = {}) {
-    return new Promise((resolve, reject) => {
-      this.findCollection(config, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        /* Data should output as a dictionary, convert from array. */
-        const resultsDictionary =
-          (results &&
-            results.reduce((output, result) => {
-              output[result.id || result._id.id] = result;
-              return output;
-            }, {})) ||
-          {};
-        resolve(resultsDictionary);
-      });
-    });
+  async fetchAll(config = {} as MongoDbDataSourceConfig) {
+    const results = await this.findCollection(config);
+
+    /* Data should output as a dictionary, convert from array. */
+    return results?.reduce((output, result) => {
+      const key = result.id || result._id.id;
+      if (!key && key !== 0) {
+        throw new Error(`Invalid key for datasource fetchAll result, got ${key}: ` + JSON.stringify(result));
+      }
+
+      output[key] = result;
+      return output;
+    }, {}) || {};
   }
 
   /**
    * Perform a full replace of all data for a given config. This is the write
    * version of fetchAll
-   * @param {Object} config
-   * @param {any} data
-   * @return {Promise}
    */
-  replace(config = {}, data) {
-    return new Promise((resolve, reject) => {
-      /* Data should come in as a dictionary, convert to array. */
-      const dataArray = Object.values(data);
-      this.replaceCollection(config, dataArray, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results.ops);
-      });
-    });
+  async replace(config = {} as MongoDbDataSourceConfig, data: any) {
+    /* Data should come in as a dictionary, convert to array. */
+    const dataArray = Array.from(Object.values(data));
+    const results =  await this.replaceCollection(config, dataArray);
   }
 }
 
