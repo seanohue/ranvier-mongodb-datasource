@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import clientConnect from "./client-connect";
 import validateDatasourceConfig from "./config-validation";
-import { MongoDbDataSourceConfig } from "./types";
+import { MongoDbDataSourceConfig, MongoDbIdentity } from "./types";
 
 export default class MongoDbDataSource {
   /**
@@ -43,38 +43,34 @@ export default class MongoDbDataSource {
     return `mongodb://${user}:${password}@${host}/?authMechanism=${authMechanism}&authSource=${db}`;
   }
 
-  replaceCollection(config, data, callback) {
-    this.client.catch(callback).then((client) => {
-      const collection = this.clientCollection(client, config);
-      collection
+  async replaceCollection(config: MongoDbDataSourceConfig, data) {
+    const collection = await this.clientCollection(config);
         // build filter without id, to capture other stuff in same
         // bundle/area only...
-        .deleteMany(this.buildIdFilter(config))
-        // eat the errors, important errors like connection issues
-        // will be thrown with the insert
-        .catch(() => {})
-        .finally(() => {
-          data.forEach((v) => (v._id = this.buildIdentity(config, v.id)));
-          collection.insertMany(data, {}, callback);
-        });
-    });
+    const cursor = collection.deleteMany(this.buildIdFilter(config))
+      .finally(() => {
+        data.forEach((v) => (v._id = this.buildIdentity(config, v.id)));
+        collection.insertMany(data, {});
+      });
+    return cursor;
   }
 
-  replaceObject(config, id, data, callback) {
-    this.client.catch(callback).then((client) => {
-      const collection = this.clientCollection(client, config);
-      if (data) {
-        data._id = this.buildIdentity(config, id);
-        collection.replaceOne(
-          { _id: data._id },
-          data,
-          { upsert: true },
-          callback
-        );
-      } else {
-        collection.deleteOne(this.buildIdFilter(config, id), callback);
-      }
-    });
+  async replaceObject(
+    config: MongoDbDataSourceConfig, 
+    id: string, 
+    data
+  ) {
+    const collection = await this.clientCollection(this.client, config);
+    if (data) {
+      data._id = this.buildIdentity(config, id);
+      return collection.replaceOne(
+        { _id: data._id },
+        data,
+        { upsert: true },
+      );
+    } else {
+      return collection.deleteOne(this.buildIdFilter(config, id));
+    }
   }
 
   async findCollection(config) {
@@ -98,11 +94,22 @@ export default class MongoDbDataSource {
     });
   }
 
-  clientCollection(client, config) {
-    if (!config.collection) {
-      throw new Error("No collection configured for MongoDbDatasource");
+  async clientCollection(config: MongoDbDataSourceConfig) {
+    // Lazily init client on first request:
+    if (!this.client) {
+      await this.init();
     }
+
+    // Using '!' here because above we ensure it exists with `init()`.
+    const client = this.client!;
+
+    if (!config.collection) {
+      throw new Error("No collection configured for " + this.constructor.name);
+    }
+
     console.log(`[MongoDbDatasource][clientCollection] dbName=${this.config.name} collectionName=${config.collection}`);
+    
+    //FIXME: Unsure as to why we sometimes pass config around and othertimes refer to `this.config`.
     const db = client.db(this.config.name);
     const collection = db.collection(config.collection);
     return collection;
@@ -120,21 +127,27 @@ export default class MongoDbDataSource {
       });
   }
 
-  buildIdentity(config, id) {
-    const identity = {};
+  buildIdentity(config, id?: string | number) {
+    const identity: MongoDbIdentity = {};
+
+    // FIXME: do we have to uppercase and not downcase?
+    // Convert all ids to uppercase strings because YELLING:
     if (id || id === 0) {
-      identity.id = !isNaN(id) ? id : id.toString().toUpperCase();
+      identity.id = id.toString().toUpperCase();    
     }
-    if (config && config.bundle) {
+
+    if (config?.bundle) {
       identity.bundle = config.bundle;
     }
-    if (config && config.area) {
+
+    if (config?.area) {
       identity.area = config.area;
     }
+
     return identity;
   }
 
-  buildIdFilter(config, id) {
+  buildIdFilter(config: MongoDbDataSourceConfig, id?: string) {
     const identity = this.buildIdentity(config, id);
     const filter = {};
     if (identity.id) {
