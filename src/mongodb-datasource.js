@@ -69,12 +69,15 @@ class MongoDbDataSource {
     });
   }
 
-  findCollection(config, callback) {
-    this.client.catch(callback).then((client) => {
-      this.clientCollection(client, config)
-        .find(this.buildIdFilter(config))
-        .toArray(callback);
-    });
+  async findCollection(config) {
+    try {
+      const collection = this.clientCollection(config);
+      const cursor = collection.find(this.buildIdFilter(config));
+      return cursor.toArray();
+    } catch (e) {
+      console.warn('findCollection failed for config', config);
+      throw e;
+    }
   }
 
   findObject(config, id, callback) {
@@ -91,7 +94,7 @@ class MongoDbDataSource {
     if (!config.collection) {
       throw new Error("No collection configured for MongoDbDatasource");
     }
-
+    console.log(`[MongoDbDatasource][clientCollection] dbName=${this.config.name} collectionName=${config.collection}`);
     const db = client.db(this.config.name);
     const collection = db.collection(config.collection);
     return collection;

@@ -40,9 +40,6 @@ class MongoDbArrayDataSource extends MongoDbDataSource {
    */
   hasData(config = {}) {
     return new Promise((resolve, reject) => {
-      // Doesn't matter for our purposes: (or does it?)
-      // delete config.bundle;
-      // delete config.area;
       this.findCollection(config, (err, results) => {
         if (err) {
           return reject(err);
@@ -60,15 +57,8 @@ class MongoDbArrayDataSource extends MongoDbDataSource {
    * @param {object} config
    * @return {Promise<any>}
    */
-  fetchAll(config = {}) {
-    return new Promise((resolve, reject) => {
-      this.findCollection(config, (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
+  async fetchAll(config = {}) {
+    return this.findCollection(config);
   }
 
   /**
