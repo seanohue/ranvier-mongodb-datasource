@@ -2,7 +2,9 @@
 
 A set of MongoDb datasources for Ranvier MUD that uses The official [MongoDB](https://www.mongodb.com/) [Driver for Node.js](https://github.com/mongodb/node-mongodb-native).
 
-# Prerequisites
+Converted to TypeScript after being forked from original `ranvier-mongodb-datasource`.
+
+## Prerequisites
 
 1. You must have a MongoDb database setup and ready to accept connections.
 
@@ -25,9 +27,9 @@ Each datasource requires a config containing the database connection information
 
 **Note**: The collection name does not support any token insertion, collection names like `[AREA]-rooms` will not be changed. The datasources already handle bundle and area filtering, so all entities of the same type can be stored in the same collection. See the [Developer's Note](#developers-note-about-mongodbs-_id-field) below.
 
-###### Example:
+#### Example ranvier.json config
 
-```js
+```json
 {
   "dataSources": {
     "MongoDbArray": {
@@ -70,7 +72,7 @@ Each datasource requires a config containing the database connection information
 
 MongoDb requires that all documents have a primary key field named `_id`. The datasource will populate this field with the entity `id` (converted to uppercase if string), area name, and bundle name provided by the Ranvier engine.
 
-###### Example:
+### Example \_id field
 
 ```js
 {
