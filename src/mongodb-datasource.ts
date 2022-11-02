@@ -43,13 +43,13 @@ export default class MongoDbDataSource {
     return `mongodb://${user}:${password}@${host}/?authMechanism=${authMechanism}&authSource=${db}`;
   }
 
-  async replaceCollection(config: MongoDbDataSourceConfig, data) {
+  async replaceCollection(config: MongoDbDataSourceConfig, data: any) {
     const collection = await this.clientCollection(config);
         // build filter without id, to capture other stuff in same
         // bundle/area only...
     const cursor = collection.deleteMany(this.buildIdFilter(config))
       .finally(() => {
-        data.forEach((v) => (v._id = this.buildIdentity(config, v.id)));
+        data.forEach((v: any) => (v._id = this.buildIdentity(config, v.id)));
         collection.insertMany(data, {});
       });
     return cursor;
@@ -58,7 +58,7 @@ export default class MongoDbDataSource {
   async replaceObject(
     config: MongoDbDataSourceConfig, 
     id: string, 
-    data
+    data: any,
   ) {
     const collection = await this.clientCollection(config);
     if (data) {
@@ -115,7 +115,7 @@ export default class MongoDbDataSource {
     this.client?.close();
   }
 
-  buildIdentity(config, id?: string | number) {
+  buildIdentity(config: MongoDbDataSourceConfig, id?: string | number) {
     const identity: MongoDbIdentity = {};
 
     // FIXME: do we have to uppercase and not downcase?

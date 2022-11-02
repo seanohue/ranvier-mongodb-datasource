@@ -15,14 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_datasource_1 = __importDefault(require("./mongodb-datasource"));
 class MongoDbArrayDataSource extends mongodb_datasource_1.default {
     /**
-     * The constructor of the DataSource takes two parameters:
+     * Params:
      *   config: the value of 'config' from the `dataSources` configuration in
      *           ranvier.json
-     *
-     *   rootPath: A string representing the project root directory (the same
-     *             directory that contains ranvier.json)
      */
-    constructor(config = {}, rootPath) {
+    constructor(config = {}) {
         super(config);
     }
     /*

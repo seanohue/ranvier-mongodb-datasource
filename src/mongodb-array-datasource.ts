@@ -3,14 +3,11 @@ import { MongoDbDataSourceConfig } from "./types";
 
 export default class MongoDbArrayDataSource extends MongoDbDataSource {
   /**
-   * The constructor of the DataSource takes two parameters:
+   * Params:
    *   config: the value of 'config' from the `dataSources` configuration in
    *           ranvier.json
-   *
-   *   rootPath: A string representing the project root directory (the same
-   *             directory that contains ranvier.json)
    */
-  constructor(config = {} as MongoDbDataSourceConfig, rootPath) {
+  constructor(config = {} as MongoDbDataSourceConfig) {
     super(config);
   }
 

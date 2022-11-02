@@ -1,5 +1,6 @@
 import { MongoDbDataSourceConfig } from "./types";;
 import MongoDbDataSource from "./mongodb-datasource";
+import { Document, WithId } from "mongodb";
 
 // FIXME: May need to add some methods "lost" from the array datasource class. Those can be moved to base.
 export default class MongoDbObjectDataSource extends MongoDbDataSource {
@@ -11,14 +12,14 @@ export default class MongoDbObjectDataSource extends MongoDbDataSource {
 
     /* Data should output as a dictionary, convert from array. */
     return results?.reduce((output, result) => {
-      const key = result.id || result._id.id;
+      const key: string | number = result.id || result._id.id;
       if (!key && key !== 0) {
         throw new Error(`Invalid key for datasource fetchAll result, got ${key}: ` + JSON.stringify(result));
       }
 
       output[key] = result;
       return output;
-    }, {});
+    }, {} as Record<string | number, WithId<Document>>);
   }
 
   /**
