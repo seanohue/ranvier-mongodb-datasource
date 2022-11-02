@@ -191,6 +191,7 @@ var MongoDbObjectDataSource = class extends MongoDbDataSource {
 
 // index.ts
 module.exports = {
+  clientConnect,
   MongoDbDatasource: MongoDbDataSource,
   MongoDbArrayDatasource: MongoDbArrayDataSource,
   MongoDbObjectDatasource: MongoDbObjectDataSource
