@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A set of MongoDb datasources for Ranvier MUD",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup index.ts --dts"
   },
