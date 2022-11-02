@@ -33,6 +33,12 @@ class MongoDbObjectDataSource extends mongodb_datasource_1.default {
             }, {});
         });
     }
+    hasData(config = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const collection = yield this.findCollection(config);
+            return Boolean(collection.length);
+        });
+    }
     /**
      * Perform a full replace of all data for a given config. This is the write
      * version of fetchAll

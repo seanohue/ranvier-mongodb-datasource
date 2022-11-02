@@ -22,6 +22,11 @@ export default class MongoDbObjectDataSource extends MongoDbDataSource {
     }, {} as Record<string | number, WithId<Document>>);
   }
 
+  async hasData(config = {} as MongoDbDataSourceConfig) {
+    const collection = await this.findCollection(config);
+    return Boolean(collection.length);
+  }
+
   /**
    * Perform a full replace of all data for a given config. This is the write
    * version of fetchAll
