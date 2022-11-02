@@ -3,7 +3,7 @@ import MongoDbArrayDatasource from "./mongodb-array-datasource";
 import MongoDbObjectDatasource from "./mongodb-object-datasource";
 import clientConnect from "./client-connect";
 
-module.exports = {
+export default {
   clientConnect,
   MongoDbDatasource,
   MongoDbArrayDatasource,

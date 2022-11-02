@@ -7,7 +7,7 @@ const mongodb_datasource_1 = __importDefault(require("./mongodb-datasource"));
 const mongodb_array_datasource_1 = __importDefault(require("./mongodb-array-datasource"));
 const mongodb_object_datasource_1 = __importDefault(require("./mongodb-object-datasource"));
 const client_connect_1 = __importDefault(require("./client-connect"));
-module.exports = {
+exports.default = {
     clientConnect: client_connect_1.default,
     MongoDbDatasource: mongodb_datasource_1.default,
     MongoDbArrayDatasource: mongodb_array_datasource_1.default,
