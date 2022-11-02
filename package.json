@@ -2,7 +2,7 @@
   "name": "ranvier-mongodb-datasource",
   "version": "1.0.0",
   "description": "A set of MongoDb datasources for Ranvier MUD",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsup index.ts --dts"
   },
