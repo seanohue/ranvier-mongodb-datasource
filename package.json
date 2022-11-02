@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup index.ts --dts"
+    "build": "tsc"
   },
   "keywords": [
     "ranvier",
@@ -29,7 +29,6 @@
   },
   "homepage": "https://github.com/rillist/ranvier-mongodb-datasource#readme",
   "devDependencies": {
-    "tsup": "^6.3.0",
     "typescript": "^4.8.4"
   }
 }
