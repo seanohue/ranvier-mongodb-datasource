@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ;
 const mongodb_datasource_1 = __importDefault(require("./mongodb-datasource"));
 // FIXME: May need to add some methods "lost" from the array datasource class. Those can be moved to base.
+// FIXME: 2022-11-02T21:50:58.384Z - error: fetch not supported by MongoDbObject
 class MongoDbObjectDataSource extends mongodb_datasource_1.default {
     /**
      * Returns all entries for a given config.
@@ -33,10 +34,22 @@ class MongoDbObjectDataSource extends mongodb_datasource_1.default {
             }, {});
         });
     }
+    /**
+     * Returns if the collection has data
+     */
     hasData(config = {}) {
         return __awaiter(this, void 0, void 0, function* () {
             const collection = yield this.findCollection(config);
             return Boolean(collection.length);
+        });
+    }
+    /**
+     * Gets a specific record by id for a given config
+     */
+    fetch(config = {}, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('Fetching with ', config, id);
+            return this.findObject(config, id);
         });
     }
     /**
