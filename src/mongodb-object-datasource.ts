@@ -25,6 +25,13 @@ export default class MongoDbObjectDataSource extends MongoDbDataSource {
   }
 
   /**
+   * Update specific record. Write version of `fetch`
+   */
+   async update(config = {} as MongoDbDataSourceConfig, id: string, data: any) {
+    return this.replaceObject(config, id, data);
+  }
+
+  /**
    * Returns if the collection has data
    */
   async hasData(config = {} as MongoDbDataSourceConfig) {

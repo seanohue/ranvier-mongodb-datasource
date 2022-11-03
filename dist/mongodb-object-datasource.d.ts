@@ -7,6 +7,10 @@ export default class MongoDbObjectDataSource extends MongoDbDataSource {
      */
     fetchAll(config?: MongoDbDataSourceConfig): Promise<Record<string | number, WithId<Document>>>;
     /**
+     * Update specific record. Write version of `fetch`
+     */
+    update(config: MongoDbDataSourceConfig, id: string, data: any): Promise<Document>;
+    /**
      * Returns if the collection has data
      */
     hasData(config?: MongoDbDataSourceConfig): Promise<boolean>;

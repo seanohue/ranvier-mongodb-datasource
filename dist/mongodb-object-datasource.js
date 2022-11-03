@@ -35,6 +35,14 @@ class MongoDbObjectDataSource extends mongodb_datasource_1.default {
         });
     }
     /**
+     * Update specific record. Write version of `fetch`
+     */
+    update(config = {}, id, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.replaceObject(config, id, data);
+        });
+    }
+    /**
      * Returns if the collection has data
      */
     hasData(config = {}) {
