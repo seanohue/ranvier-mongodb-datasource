@@ -3,6 +3,8 @@ import MongoDbDataSource from "./mongodb-datasource";
 import { Document, WithId } from "mongodb";
 
 // FIXME: May need to add some methods "lost" from the array datasource class. Those can be moved to base.
+// FIXME: 2022-11-02T21:50:58.384Z - error: fetch not supported by MongoDbObject
+
 export default class MongoDbObjectDataSource extends MongoDbDataSource {
   /**
    * Returns all entries for a given config.
@@ -22,9 +24,20 @@ export default class MongoDbObjectDataSource extends MongoDbDataSource {
     }, {} as Record<string | number, WithId<Document>>);
   }
 
+  /**
+   * Returns if the collection has data
+   */
   async hasData(config = {} as MongoDbDataSourceConfig) {
     const collection = await this.findCollection(config);
     return Boolean(collection.length);
+  }
+
+  /**
+   * Gets a specific record by id for a given config
+   */
+   async fetch(config = {} as MongoDbDataSourceConfig, id: string) {
+    console.log('Fetching with ', config, id);
+    return this.findObject(config, id);
   }
 
   /**
