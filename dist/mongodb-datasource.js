@@ -111,7 +111,7 @@ class MongoDbDataSource {
         if (id || id === 0) {
             identity.id = id.toString().toUpperCase();
         }
-        if (config === null || config === void 0 ? void 0 : config.bundle) {
+        if (config.useBundle && (config === null || config === void 0 ? void 0 : config.bundle)) {
             identity.bundle = config.bundle;
         }
         if (config === null || config === void 0 ? void 0 : config.area) {

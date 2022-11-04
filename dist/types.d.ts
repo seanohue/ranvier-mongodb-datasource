@@ -6,6 +6,7 @@ export interface MongoDbDataSourceConfig {
     pass: string;
     bundle?: string;
     area?: string;
+    useBundle?: boolean;
 }
 export interface MongoDbIdentity {
     id?: string | number;

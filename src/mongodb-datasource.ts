@@ -126,7 +126,7 @@ export default class MongoDbDataSource {
       identity.id = id.toString().toUpperCase();    
     }
 
-    if (config?.bundle) {
+    if (config.useBundle && config?.bundle) {
       identity.bundle = config.bundle;
     }
 

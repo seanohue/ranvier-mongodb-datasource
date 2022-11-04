@@ -7,6 +7,7 @@ export interface MongoDbDataSourceConfig {
   pass: string;
   bundle?: string;
   area?: string;
+  useBundle?: boolean; // whether to filter by bundle, default undefined (false)
 }
 
 export interface MongoDbIdentity {
