@@ -146,7 +146,7 @@ export default class MongoDbDataSource {
     if (identity.area) {
       filter["_id.area"] = identity.area;
     }
-    if (identity.bundle) {
+    if (config.useBundle && identity.bundle) {
       filter["_id.bundle"] = identity.bundle;
     }
     return filter;
