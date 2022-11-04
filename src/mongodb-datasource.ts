@@ -76,7 +76,9 @@ export default class MongoDbDataSource {
   async findCollection(config: MongoDbDataSourceConfig) {
     try {
       const collection = await this.clientCollection(config);
-      const cursor = collection.find(this.buildIdFilter(config));
+      const idFilter = this.buildIdFilter(config);
+      console.warn(`Searching collection using idFilter`, idFilter);
+      const cursor = collection.find(idFilter);
       return cursor.toArray();
     } catch (e) {
       console.warn('findCollection failed for config', config);
@@ -103,7 +105,7 @@ export default class MongoDbDataSource {
       throw new Error("No collection configured for " + this.constructor.name);
     }
 
-    console.log(`[MongoDbDatasource][clientCollection] dbName=${this.config.name} collectionName=${config.collection}`);
+    console.log(`[MongoDbDatasource][clientCollection] db=${this.config.name} collectionName=${config.collection}`);
     
     //FIXME: Unsure as to why we sometimes pass config around and othertimes refer to `this.config`.
     const db = client.db(this.config.name);

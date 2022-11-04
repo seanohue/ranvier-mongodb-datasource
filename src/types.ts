@@ -1,6 +1,6 @@
 // FIXME: The library uses `config` to mean both datasource config and a kind of id filter config.
 export interface MongoDbDataSourceConfig {
-  collection: any;
+  collection: string;
   host: string;
   name: string;
   user: string;

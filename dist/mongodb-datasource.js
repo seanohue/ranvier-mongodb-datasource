@@ -62,7 +62,9 @@ class MongoDbDataSource {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const collection = yield this.clientCollection(config);
-                const cursor = collection.find(this.buildIdFilter(config));
+                const idFilter = this.buildIdFilter(config);
+                console.warn(`Searching collection using idFilter`, idFilter);
+                const cursor = collection.find(idFilter);
                 return cursor.toArray();
             }
             catch (e) {
@@ -89,7 +91,7 @@ class MongoDbDataSource {
             if (!config.collection) {
                 throw new Error("No collection configured for " + this.constructor.name);
             }
-            console.log(`[MongoDbDatasource][clientCollection] dbName=${this.config.name} collectionName=${config.collection}`);
+            console.log(`[MongoDbDatasource][clientCollection] db=${this.config.name} collectionName=${config.collection}`);
             //FIXME: Unsure as to why we sometimes pass config around and othertimes refer to `this.config`.
             const db = client.db(this.config.name);
             const collection = db.collection(config.collection);

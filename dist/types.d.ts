@@ -1,5 +1,5 @@
 export interface MongoDbDataSourceConfig {
-    collection: any;
+    collection: string;
     host: string;
     name: string;
     user: string;
