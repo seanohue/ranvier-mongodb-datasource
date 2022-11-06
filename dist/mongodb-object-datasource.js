@@ -26,6 +26,7 @@ class MongoDbObjectDataSource extends mongodb_datasource_1.default {
             /* Data should output as a dictionary, convert from array. */
             return results === null || results === void 0 ? void 0 : results.reduce((output, result) => {
                 const key = result.id || result._id.id;
+                console.log({ key, result });
                 if (!key && key !== 0) {
                     throw new Error(`Invalid key for datasource fetchAll result, got ${key}: ` + JSON.stringify(result));
                 }

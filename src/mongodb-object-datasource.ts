@@ -15,6 +15,7 @@ export default class MongoDbObjectDataSource extends MongoDbDataSource {
     /* Data should output as a dictionary, convert from array. */
     return results?.reduce((output, result) => {
       const key: string | number = result.id || result._id.id;
+      console.log({ key, result });
       if (!key && key !== 0) {
         throw new Error(`Invalid key for datasource fetchAll result, got ${key}: ` + JSON.stringify(result));
       }
