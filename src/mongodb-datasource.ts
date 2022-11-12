@@ -63,12 +63,16 @@ export default class MongoDbDataSource {
     const collection = await this.clientCollection(config);
     if (data) {
       data._id = this.buildIdentity(config, id);
-      return collection.replaceOne(
+      const result =  collection.replaceOne(
         { _id: data._id },
         data,
         { upsert: true },
       );
+
+      console.log('Result of update: ', result);
+      return result;
     } else {
+      console.log('No data included in update... deleting ' + id);
       return collection.deleteOne(this.buildIdFilter(config, id));
     }
   }
